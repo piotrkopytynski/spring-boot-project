@@ -1,0 +1,52 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.9.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'com.boot.project'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	hibernateJpaVersion = "1.0.0.Final"
+	springBootStarterJdbcVersion =  "1.5.9.RELEASE"
+	postgresqlVersion = "42.1.4"
+	hibernateCoreVersion = "5.2.12.Final"
+	hibernateValidatorVersion = "6.0.5.Final"
+	validationApiVersion = "2.0.0.Final"
+	springOrmVersion = "5.0.2.RELEASE"
+	h2Version = "1.4.196"
+	mockitoVersion = "2.13.0"
+	assertjVersion = "3.8.0"
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${hibernateJpaVersion}")
+	compile("org.springframework.boot:spring-boot-starter-jdbc:${springBootStarterJdbcVersion}")
+	compile("org.postgresql:postgresql:${postgresqlVersion}")
+	compile("org.hibernate:hibernate-core:${hibernateCoreVersion}")
+	compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+	compile("javax.validation:validation-api:${validationApiVersion}")
+	compile("org.springframework:spring-orm:${springOrmVersion}")
+	testCompile("com.h2database:h2:${h2Version}")
+	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+	testCompile("org.assertj:assertj-core:${assertjVersion}")
+}
