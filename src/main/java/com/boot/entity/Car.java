@@ -1,9 +1,14 @@
 package com.boot.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity(name = "car")
+@Getter
+@Setter
 public class Car extends AbstractEntity {
 
     @NotBlank
@@ -19,22 +24,6 @@ public class Car extends AbstractEntity {
 
     public Car(final String registrationNumber) {
         this.registrationNumber = registrationNumber;
-    }
-
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(final String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(final Person person) {
-        this.person = person;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.boot.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -15,6 +18,8 @@ import static java.util.Collections.unmodifiableSet;
 
 @Entity(name = "address")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "street", "house_number", "postal_code"}))
+@Getter
+@Setter
 public class Address extends AbstractEntity {
 
     @NotBlank
@@ -32,6 +37,7 @@ public class Address extends AbstractEntity {
     @Column(name = "postal_code", nullable = false, length = 16)
     private String postalCode;
 
+    @Setter(AccessLevel.NONE)
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(name = "address_person",
@@ -55,38 +61,6 @@ public class Address extends AbstractEntity {
         this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
-        this.postalCode = postalCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(final String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(final String street) {
-        this.street = street;
-    }
-
-    public String getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(final String houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(final String postalCode) {
         this.postalCode = postalCode;
     }
 

@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset author:piotr
+
 BEGIN TRANSACTION;
 
 CREATE SEQUENCE hibernate_sequence;
@@ -23,12 +26,12 @@ CREATE TABLE address (
 );
 
 CREATE INDEX address_city_index ON address USING btree (city);
-CREATE INDEX address_house_number_index ON address USING btree (house_number);
+CREATE INDEX address_postal_code_index ON address USING btree (postal_code);
 
 CREATE TABLE car (
     id BIGINT PRIMARY KEY,
     registration_number VARCHAR(16) UNIQUE,
-    person_id BIGINT REFERENCES person(id) ON UPDATE SET NULL
+    person_id BIGINT REFERENCES person(id) ON DELETE SET NULL
 );
 
 CREATE TABLE address_person (
@@ -38,3 +41,5 @@ CREATE TABLE address_person (
 );
 
 COMMIT TRANSACTION;
+
+--rollback DROP SEQUENCE hibernate_sequence; DROP TABLE address_person; DROP TABLE person CASCADE; DROP TABLE address CASCADE; DROP TABLE car CASCADE;

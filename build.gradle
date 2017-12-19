@@ -1,25 +1,46 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.9.RELEASE'
+		springBootVersion = "1.5.9.RELEASE"
+		liquibasePluginVersion = "1.2.4"
+		postgresqlVersion = "42.1.4"
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.postgresql:postgresql:${postgresqlVersion}")
+		classpath("gradle.plugin.org.liquibase:liquibase-gradle-plugin:${liquibasePluginVersion}")
 	}
+}
+
+plugins {
+	id 'org.liquibase.gradle' version '1.2.4'
+	id "net.ltgt.apt" version "0.13"
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+
+repositories {
+	mavenCentral()
+}
 
 group = 'com.boot.project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-repositories {
-	mavenCentral()
+liquibase {
+	activities {
+		main {
+			changeLogFile 'liquibase-changelog.xml'
+			url 'jdbc:postgresql://localhost:5433/spring_boot_project'
+			username 'traininguser'
+			password 'trainingpassword'
+		}
+	}
 }
 
 ext {
@@ -33,6 +54,9 @@ ext {
 	h2Version = "1.4.196"
 	mockitoVersion = "2.13.0"
 	assertjVersion = "3.8.0"
+	liquibaseVersion = "3.5.3"
+	lombokVersion = "1.16.18"
+	hibernateMetamodelGeneratorVersion = "5.2.12.Final"
 }
 
 dependencies {
@@ -46,7 +70,13 @@ dependencies {
 	compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
 	compile("javax.validation:validation-api:${validationApiVersion}")
 	compile("org.springframework:spring-orm:${springOrmVersion}")
+	compile("org.liquibase:liquibase-core:${liquibaseVersion}")
 	testCompile("com.h2database:h2:${h2Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 	testCompile("org.assertj:assertj-core:${assertjVersion}")
+
+	compile("org.projectlombok:lombok:${lombokVersion}")
+	apt("org.projectlombok:lombok:${lombokVersion}")
+	compile("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
+	apt("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
 }

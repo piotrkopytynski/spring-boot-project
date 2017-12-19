@@ -1,6 +1,8 @@
 package com.boot.entity;
 
-import org.hibernate.annotations.Check;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,6 +15,8 @@ import java.util.Set;
 import static java.util.Collections.unmodifiableSet;
 
 @Entity(name = "person")
+@Getter
+@Setter
 public class Person extends AbstractEntity {
 
     @NotBlank
@@ -33,13 +37,15 @@ public class Person extends AbstractEntity {
 
     @NotNull
     @PositiveOrZero
-    @Check(constraints = "children_number >= 0")
+//    @Check(constraints = "children_number >= 0")
     @Column(name = "children_number", nullable = false)
     private long childrenNumber;
 
+    @Setter(AccessLevel.NONE)
     @ManyToMany(mappedBy = "persons", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     Set<Address> addresses = new HashSet<>();
 
+    @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "person", cascade = {CascadeType.MERGE})
     private Set<Car> cars = new HashSet<>();
 
@@ -51,46 +57,6 @@ public class Person extends AbstractEntity {
         this.email = email;
         this.gender = gender;
         this.insured = insured;
-        this.childrenNumber = childrenNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(final Gender gender) {
-        this.gender = gender;
-    }
-
-    public boolean getInsured() {
-        return insured;
-    }
-
-    public void setInsured(final boolean insured) {
-        this.insured = insured;
-    }
-
-    public long getChildrenNumber() {
-        return childrenNumber;
-    }
-
-    public void setChildrenNumber(final long childrenNumber) {
         this.childrenNumber = childrenNumber;
     }
 
@@ -112,15 +78,15 @@ public class Person extends AbstractEntity {
         return unmodifiableSet(cars);
     }
 
-    public void addCar(final Car car) {
-        cars.add(car);
-        car.setPerson(this);
-    }
-
-    public void removeCar(final Car car) {
-        cars.remove(car);
-        car.setPerson(null);
-    }
+//    public void addCar(final Car car) {
+//        cars.add(car);
+//        car.setPerson(this);
+//    }
+//
+//    public void removeCar(final Car car) {
+//        cars.remove(car);
+//        car.setPerson(null);
+//    }
 
     @Override
     public boolean equals(Object o) {
