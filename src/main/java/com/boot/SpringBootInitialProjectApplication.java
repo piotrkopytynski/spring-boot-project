@@ -12,9 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
 
 @SpringBootApplication
+//@EnableTransactionManagement
 public class SpringBootInitialProjectApplication {
 
     private final AddressDao addressDao;
@@ -40,9 +47,9 @@ public class SpringBootInitialProjectApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            final Person person = new Person("frgeghgedy", "fge15gr@553gmgil.com", Gender.M, true, 2);
-//
-            final Car car = carDao.save(new Car("DW 213532"));
+//            final Person person = new Person("frgeghgedy", "fge15gr@553gmgil.com", Gender.M, true, 2);
+////
+//            final Car car = carDao.save(new Car("DW 213532"));
 //            final Car car2 = carDao.save(new Car("OGL 213532"));
 //            person.addCar(car);
 //            person.addCar(car2);

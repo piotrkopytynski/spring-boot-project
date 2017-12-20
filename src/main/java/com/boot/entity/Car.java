@@ -1,5 +1,6 @@
 package com.boot.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Entity(name = "car")
 @Getter
 @Setter
+@EqualsAndHashCode(of = "registrationNumber", callSuper = false)
 public class Car extends AbstractEntity {
 
     @NotBlank
@@ -24,21 +26,5 @@ public class Car extends AbstractEntity {
 
     public Car(final String registrationNumber) {
         this.registrationNumber = registrationNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Car car = (Car) o;
-
-        return registrationNumber.equals(car.registrationNumber);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return registrationNumber.hashCode();
     }
 }

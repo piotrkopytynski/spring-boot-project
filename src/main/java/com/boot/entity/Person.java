@@ -1,6 +1,7 @@
 package com.boot.entity;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import static java.util.Collections.unmodifiableSet;
 @Entity(name = "person")
 @Getter
 @Setter
+@EqualsAndHashCode(of = "email", callSuper = false)
 public class Person extends AbstractEntity {
 
     @NotBlank
@@ -24,7 +26,8 @@ public class Person extends AbstractEntity {
     private String name;
 
     @Email
-    @Column(name = "email", unique = true, length = 254)
+    @NotBlank
+    @Column(name = "email", nullable = false, unique = true, length = 254)
     private String email;
 
     @NotNull
@@ -37,9 +40,8 @@ public class Person extends AbstractEntity {
 
     @NotNull
     @PositiveOrZero
-//    @Check(constraints = "children_number >= 0")
     @Column(name = "children_number", nullable = false)
-    private long childrenNumber;
+    private int childrenNumber;
 
     @Setter(AccessLevel.NONE)
     @ManyToMany(mappedBy = "persons", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -52,7 +54,7 @@ public class Person extends AbstractEntity {
     public Person() {
     }
 
-    public Person(final String name, final String email, final Gender gender, final boolean insured, final long childrenNumber) {
+    public Person(final String name, final String email, final Gender gender, final boolean insured, final int childrenNumber) {
         this.name = name;
         this.email = email;
         this.gender = gender;
@@ -76,31 +78,5 @@ public class Person extends AbstractEntity {
 
     public Set<Car> getCars() {
         return unmodifiableSet(cars);
-    }
-
-//    public void addCar(final Car car) {
-//        cars.add(car);
-//        car.setPerson(this);
-//    }
-//
-//    public void removeCar(final Car car) {
-//        cars.remove(car);
-//        car.setPerson(null);
-//    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        return email != null ? email.equals(person.email) : person.email == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return email != null ? email.hashCode() : 0;
     }
 }

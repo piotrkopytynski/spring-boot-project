@@ -1,46 +1,62 @@
 package com.boot.service;
 
 import com.boot.AbstractTest;
+import com.boot.dao.impl.PersonDaoImpl;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import com.boot.service.impl.PersonServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 public class PersonServiceTest extends AbstractTest {
 
-    @Autowired
+    @Mock
+    private PersonDaoImpl personDao;
+
+    @InjectMocks
     private PersonServiceImpl personService;
+
+    private List<Person> persons = new ArrayList<>();
 
     @Before
     public void setup() {
-        final Person person1 = new Person("Jenny", "1@gmail.com", Gender.M, true, 0);
-        final Person person2 = new Person("Benny", "2@gmail.com", Gender.M, true, 3);
-        final Person person3 = new Person("Menny", "3@gmail.com", Gender.M, true, 2);
-        final Person person4 = new Person("Lenny", "4@gmail.com", Gender.F, true, 1);
-        final Person person5 = new Person("Srenny", "5@gmail.com", Gender.M, true, 1);
-        final Person person6 = new Person("Kenny", "6@gmail.com", Gender.F, true, -1);
-
-        personService.save(person1);
-        personService.save(person2);
-        personService.save(person3);
-        personService.save(person4);
-        personService.save(person5);
-        personService.save(person6);
+        persons.addAll(Arrays.asList(
+                new Person("Jenny", "1@gmail.com", Gender.M, true, 0),
+                new Person("Benny", "2@gmail.com", Gender.M, true, 3),
+                new Person("Menny", "3@gmail.com", Gender.M, true, 2),
+                new Person("Lenny", "4@gmail.com", Gender.F, true, 1),
+                new Person("Srenny", "5@gmail.com", Gender.M, true, 1),
+                new Person("Kenny", "6@gmail.com", Gender.F, true, -1)
+        ));
     }
 
     @Test
     public void shouldReturnProperNumberOfPersonsWhenCorrectArgumentsGiven() {
+        //when
+        when(personDao.findAll()).thenReturn(persons);
+        final long personsNumber = personService.countPersonsByGivenGenderAndMinimalChildrenNumber(Gender.M, 1);
+
         //then
-        assertThat(personService.countPersonsByGivenGenderAndMinimalChildrenNumber(Gender.M, 1)).isEqualTo(3);
+        assertThat(personsNumber).isEqualTo(3);
     }
 
     @Test
     public void shouldReturnEmptySetWhenWrongArgumentsGiven() {
+        //when
+        when(personDao.findAll()).thenReturn(persons);
+        final long personsNumber = personService.countPersonsByGivenGenderAndMinimalChildrenNumber(null, 1);
+
         //then
-        assertThat(personService.countPersonsByGivenGenderAndMinimalChildrenNumber(null, 1)).isEqualTo(0);
+        assertThat(personsNumber).isEqualTo(0);
     }
 }

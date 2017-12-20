@@ -35,7 +35,7 @@ sourceCompatibility = 1.8
 liquibase {
 	activities {
 		main {
-			changeLogFile 'liquibase-changelog.xml'
+			changeLogFile 'src/main/resources/liquibase-changelog.xml'
 			url 'jdbc:postgresql://localhost:5433/spring_boot_project'
 			username 'traininguser'
 			password 'trainingpassword'
@@ -57,6 +57,7 @@ ext {
 	liquibaseVersion = "3.5.3"
 	lombokVersion = "1.16.18"
 	hibernateMetamodelGeneratorVersion = "5.2.12.Final"
+	springBootStarterDataJpaVersion = "1.5.9.RELEASE"
 }
 
 dependencies {
@@ -70,13 +71,13 @@ dependencies {
 	compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
 	compile("javax.validation:validation-api:${validationApiVersion}")
 	compile("org.springframework:spring-orm:${springOrmVersion}")
-	compile("org.liquibase:liquibase-core:${liquibaseVersion}")
+	compile("org.projectlombok:lombok:${lombokVersion}")
+	compile("org.springframework.data:spring-data-jpa:${springBootStarterDataJpaVersion}")
+
 	testCompile("com.h2database:h2:${h2Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 	testCompile("org.assertj:assertj-core:${assertjVersion}")
 
-	compile("org.projectlombok:lombok:${lombokVersion}")
 	apt("org.projectlombok:lombok:${lombokVersion}")
-	compile("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
 	apt("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
 }

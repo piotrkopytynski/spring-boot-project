@@ -1,6 +1,7 @@
 package com.boot.entity;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
@@ -20,6 +21,7 @@ import static java.util.Collections.unmodifiableSet;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "street", "house_number", "postal_code"}))
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"city", "street", "houseNumber", "postalCode"}, callSuper = false)
 public class Address extends AbstractEntity {
 
     @NotBlank
@@ -39,7 +41,6 @@ public class Address extends AbstractEntity {
 
     @Setter(AccessLevel.NONE)
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(name = "address_person",
             joinColumns = @JoinColumn(
                     name = "address_id"
@@ -76,28 +77,5 @@ public class Address extends AbstractEntity {
     public void removePerson(final Person person) {
         persons.remove(person);
         person.addresses.remove(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Address address = (Address) o;
-
-        if (!city.equals(address.city)) return false;
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
-        if (!houseNumber.equals(address.houseNumber)) return false;
-        return postalCode.equals(address.postalCode);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = city.hashCode();
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + houseNumber.hashCode();
-        result = 31 * result + postalCode.hashCode();
-        return result;
     }
 }

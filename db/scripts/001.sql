@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset author:piotr
+--changeset piotr:1
 
 BEGIN TRANSACTION;
 
@@ -8,10 +8,10 @@ CREATE SEQUENCE hibernate_sequence;
 CREATE TABLE person (
     id BIGINT PRIMARY KEY,
     name VARCHAR (255) NOT NULL,
-    email VARCHAR (254) UNIQUE,
+    email VARCHAR (254) NOT NULL UNIQUE,
     gender VARCHAR (255) NOT NULL,
-    insured BOOLEAN NOT NULL,
-    children_number BIGINT NOT NULL CHECK(children_number >= 0)
+    insured BOOLEAN,
+    children_number INT NOT NULL CHECK(children_number >= 0)
 );
 
 CREATE INDEX person_name_index ON person USING btree (name);
