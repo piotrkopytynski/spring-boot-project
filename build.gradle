@@ -60,19 +60,20 @@ ext {
 	springBootStarterDataJpaVersion = "1.5.9.RELEASE"
 }
 
+ext['hibernate.version'] = '5.2.12.Final'
+ext['spring.version'] = '5.0.2.RELEASE'
+
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
 	compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${hibernateJpaVersion}")
-	compile("org.springframework.boot:spring-boot-starter-jdbc:${springBootStarterJdbcVersion}")
 	compile("org.postgresql:postgresql:${postgresqlVersion}")
-	compile("org.hibernate:hibernate-core:${hibernateCoreVersion}")
 	compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
 	compile("javax.validation:validation-api:${validationApiVersion}")
 	compile("org.springframework:spring-orm:${springOrmVersion}")
 	compile("org.projectlombok:lombok:${lombokVersion}")
-	compile("org.springframework.data:spring-data-jpa:${springBootStarterDataJpaVersion}")
+	compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootStarterDataJpaVersion}")
 
 	testCompile("com.h2database:h2:${h2Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")

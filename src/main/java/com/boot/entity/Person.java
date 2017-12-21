@@ -1,9 +1,6 @@
 package com.boot.entity;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,9 +13,10 @@ import java.util.Set;
 import static java.util.Collections.unmodifiableSet;
 
 @Entity(name = "person")
+@NoArgsConstructor
+@EqualsAndHashCode(of = "email", callSuper = false)
 @Getter
 @Setter
-@EqualsAndHashCode(of = "email", callSuper = false)
 public class Person extends AbstractEntity {
 
     @NotBlank
@@ -50,9 +48,6 @@ public class Person extends AbstractEntity {
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "person", cascade = {CascadeType.MERGE})
     private Set<Car> cars = new HashSet<>();
-
-    public Person() {
-    }
 
     public Person(final String name, final String email, final Gender gender, final boolean insured, final int childrenNumber) {
         this.name = name;

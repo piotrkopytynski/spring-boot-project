@@ -5,7 +5,7 @@ import com.boot.entity.Person;
 
 import java.util.Set;
 
-public interface PersonService extends AbstractService<Person> {
+public interface PersonService {
 
-    long countPersonsByGivenGenderAndMinimalChildrenNumber(final Gender gender, final int minimalChildrenNumber);
+    long countFilteredPersons(final Gender gender, final Integer childrenNumber, final Boolean insured);
 }

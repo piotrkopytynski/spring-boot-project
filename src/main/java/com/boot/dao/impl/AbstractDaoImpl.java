@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 public abstract class AbstractDaoImpl<ENTITY> implements AbstractDao<ENTITY>  {
@@ -15,9 +16,9 @@ public abstract class AbstractDaoImpl<ENTITY> implements AbstractDao<ENTITY>  {
     private EntityManager entityManager;
 
     @Override
-    public List<ENTITY> findAll(){
+    public Set<ENTITY> findAll(){
         final Query query = entityManager.createQuery("FROM " + getEntityClass().getSimpleName().toLowerCase());
-        return (List<ENTITY>) query.getResultList();
+        return (Set<ENTITY>) query.getResultList();
     }
 
     @Override

@@ -2,15 +2,17 @@ package com.boot.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity(name = "car")
+@NoArgsConstructor
+@EqualsAndHashCode(of = "registrationNumber", callSuper = false)
 @Getter
 @Setter
-@EqualsAndHashCode(of = "registrationNumber", callSuper = false)
 public class Car extends AbstractEntity {
 
     @NotBlank
@@ -20,9 +22,6 @@ public class Car extends AbstractEntity {
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "person_id")
     private Person person;
-
-    public Car() {
-    }
 
     public Car(final String registrationNumber) {
         this.registrationNumber = registrationNumber;

@@ -2,12 +2,12 @@ package com.boot.dao;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface AbstractDao<ENTITY> {
 
-    List<ENTITY> findAll();
+    Set<ENTITY> findAll();
 
     ENTITY getById(final long id);
 

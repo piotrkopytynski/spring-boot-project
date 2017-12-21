@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class PersonServiceTest extends AbstractTest {
@@ -26,11 +27,10 @@ public class PersonServiceTest extends AbstractTest {
     @InjectMocks
     private PersonServiceImpl personService;
 
-    private List<Person> persons = new ArrayList<>();
-
-    @Before
-    public void setup() {
-        persons.addAll(Arrays.asList(
+    @Test
+    public void shouldCountFilteredPersonsWhenGivenCorrectArguments() {
+        //given
+        Set<Person> persons = new HashSet<>(Arrays.asList(
                 new Person("Jenny", "1@gmail.com", Gender.M, true, 0),
                 new Person("Benny", "2@gmail.com", Gender.M, true, 3),
                 new Person("Menny", "3@gmail.com", Gender.M, true, 2),
@@ -38,25 +38,12 @@ public class PersonServiceTest extends AbstractTest {
                 new Person("Srenny", "5@gmail.com", Gender.M, true, 1),
                 new Person("Kenny", "6@gmail.com", Gender.F, true, -1)
         ));
-    }
 
-    @Test
-    public void shouldReturnProperNumberOfPersonsWhenCorrectArgumentsGiven() {
         //when
-        when(personDao.findAll()).thenReturn(persons);
-        final long personsNumber = personService.countPersonsByGivenGenderAndMinimalChildrenNumber(Gender.M, 1);
+        when(personDao.findFiltered(any(), any(), any())).thenReturn(persons);
+        final long personsNumber = personService.countFilteredPersons(Gender.M, 1, true);
 
         //then
-        assertThat(personsNumber).isEqualTo(3);
-    }
-
-    @Test
-    public void shouldReturnEmptySetWhenWrongArgumentsGiven() {
-        //when
-        when(personDao.findAll()).thenReturn(persons);
-        final long personsNumber = personService.countPersonsByGivenGenderAndMinimalChildrenNumber(null, 1);
-
-        //then
-        assertThat(personsNumber).isEqualTo(0);
+        assertThat(personsNumber).isEqualTo(6);
     }
 }

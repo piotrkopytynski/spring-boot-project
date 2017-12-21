@@ -7,7 +7,7 @@ import com.boot.entity.Person;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -88,6 +88,8 @@ public class PersonDaoTest extends AbstractTest {
 
         final SoftAssertions softAssertions = new SoftAssertions();
 
+
+        //then
         softAssertions.assertThat(personDao.findFiltered(Gender.M, 0, true)).hasSize(1);
         softAssertions.assertThat(personDao.findFiltered(Gender.M, 0, false)).hasSize(0);
         softAssertions.assertThat(personDao.findFiltered(Gender.M, 2, true)).hasSize(1);
@@ -132,6 +134,6 @@ public class PersonDaoTest extends AbstractTest {
         personDao.save(person2);
 
         //then
-        assertThatThrownBy(() -> personDao.findAll()).isInstanceOf(JpaSystemException.class);
+        assertThatThrownBy(() -> personDao.findAll()).isInstanceOf(DataIntegrityViolationException.class);
     }
 }

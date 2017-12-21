@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-//@EnableTransactionManagement
 public class SpringBootInitialProjectApplication {
 
     private final AddressDao addressDao;

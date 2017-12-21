@@ -11,5 +11,5 @@ public interface PersonDao extends AbstractDao<Person> {
 
     Set<Person> findByGender(final Gender gender);
 
-    Set<Person> findFiltered(Gender gender, Integer childrenNumber, Boolean insured);
+    Set<Person> findFiltered(final Gender gender, final Integer childrenNumber, final Boolean insured);
 }
