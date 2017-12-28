@@ -2,11 +2,12 @@ package com.boot.dao;
 
 import com.boot.AbstractTest;
 import com.boot.entity.Address;
-import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.boot.TestObjectFactory.generateAddress;
+import static com.boot.TestObjectFactory.generatePerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AddressDaoTest extends AbstractTest {
@@ -17,22 +18,22 @@ public class AddressDaoTest extends AbstractTest {
     @Test
     public void personShouldHaveAddressAfterPersist() {
         //given
-        final Person person = new Person("frgeghdy", "f1r4y5ge5@5gmgil.com", Gender.M, true, 2);
-        final Address address = new Address("geij", "ejile", "63g", "2523");
+        final Person person = generatePerson();
+        final Address address = generateAddress();
 
         //when
         address.addPerson(person);
         addressDao.save(address);
 
         //then
-        assertThat(addressDao.getById(address.getId()).getPersons()).contains(person);
+        assertThat(addressDao.getById(address.getId()).getPeople()).contains(person);
     }
 
     @Test
     public void personShouldHaveAddressAfterMerge() {
         //given
-        final Person person = new Person("frgeegghdy", "f1r4y5ge5eg@5gmgil.com", Gender.M, true, 2);
-        final Address address = new Address("geij", "ejile", "63g", "25g23");
+        final Person person = generatePerson();
+        final Address address = generateAddress();
 
         //when
         addressDao.save(address);
@@ -40,6 +41,6 @@ public class AddressDaoTest extends AbstractTest {
         addressDao.update(address);
 
         //then
-        assertThat(addressDao.getById(address.getId()).getPersons()).contains(person);
+        assertThat(addressDao.getById(address.getId()).getPeople()).contains(person);
     }
 }

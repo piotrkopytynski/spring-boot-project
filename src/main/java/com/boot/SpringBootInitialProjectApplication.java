@@ -3,22 +3,12 @@ package com.boot;
 import com.boot.dao.AddressDao;
 import com.boot.dao.CarDao;
 import com.boot.dao.PersonDao;
-import com.boot.entity.Address;
-import com.boot.entity.Car;
-import com.boot.entity.Gender;
-import com.boot.entity.Person;
 import com.boot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 public class SpringBootInitialProjectApplication {
@@ -46,12 +36,16 @@ public class SpringBootInitialProjectApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-//            final Person person = new Person("frgeghgedy", "fge15gr@553gmgil.com", Gender.M, true, 2);
-////
-//            final Car car = carDao.save(new Car("DW 213532"));
+//            final Person person = personDao.save(new Person("frgeghgedy", "fge15gr@553gmgil.com", Gender.M, true, 2));
+//            final Person person1 = personDao.save(new Person("frgeghgedy", "fge15gr@553gmgil.com", Gender.M, true, 5));
+//            final Person person2 = personDao.save(new Person("frgeghgedy", "fgeve15gr@553gmgil.com", Gender.M, true, 1));
+//////
+//            System.out.println(personService.sumChildrenNumberOfFilteredPeople(Gender.M));
+////            final Car car = carDao.save(new Car("DW 213532"));
 //            final Car car2 = carDao.save(new Car("OGL 213532"));
 //            person.addCar(car);
 //            person.addCar(car2);
+//            personDao.save(person);
 //            personDao.save(person);
 //
 //            car.setRegistrationNumber("BLC 239895");

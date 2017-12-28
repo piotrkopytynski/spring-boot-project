@@ -5,18 +5,16 @@ import com.boot.dao.impl.PersonDaoImpl;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import com.boot.service.impl.PersonServiceImpl;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
+import static com.boot.TestObjectFactory.generatePerson;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class PersonServiceTest extends AbstractTest {
@@ -28,22 +26,51 @@ public class PersonServiceTest extends AbstractTest {
     private PersonServiceImpl personService;
 
     @Test
-    public void shouldCountFilteredPersonsWhenGivenCorrectArguments() {
+    public void shouldSumFilteredPeopleWhenGenderIsGiven() {
         //given
-        Set<Person> persons = new HashSet<>(Arrays.asList(
-                new Person("Jenny", "1@gmail.com", Gender.M, true, 0),
-                new Person("Benny", "2@gmail.com", Gender.M, true, 3),
-                new Person("Menny", "3@gmail.com", Gender.M, true, 2),
-                new Person("Lenny", "4@gmail.com", Gender.F, true, 1),
-                new Person("Srenny", "5@gmail.com", Gender.M, true, 1),
-                new Person("Kenny", "6@gmail.com", Gender.F, true, -1)
+        final Set<Person> people = new HashSet<>(Arrays.asList(
+                generatePerson(Gender.M, 0),
+                generatePerson(Gender.M, 3),
+                generatePerson(Gender.M, 2),
+                generatePerson(Gender.M, 1)
         ));
 
         //when
-        when(personDao.findFiltered(any(), any(), any())).thenReturn(persons);
-        final long personsNumber = personService.countFilteredPersons(Gender.M, 1, true);
+        when(personDao.findByGender(Gender.M)).thenReturn(people);
+        final int childrenNumber = personService.sumChildrenNumberOfFilteredPeople(Gender.M);
 
         //then
-        assertThat(personsNumber).isEqualTo(6);
+        assertThat(childrenNumber).isEqualTo(6);
+    }
+
+    @Test
+    public void shouldReturnZeroWhenPeopleHaveNoChildren() {
+        //given
+        final Set<Person> people = new HashSet<>(Arrays.asList(
+                generatePerson(Gender.M, 0),
+                generatePerson(Gender.M, 0),
+                generatePerson(Gender.M, 0),
+                generatePerson(Gender.M, 0)
+        ));
+
+        //when
+        when(personDao.findByGender(Gender.M)).thenReturn(people);
+        final int childrenNumber = personService.sumChildrenNumberOfFilteredPeople(Gender.M);
+
+        //then
+        assertThat(childrenNumber).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldReturnZeroWhenNoPeopleAreFound () {
+        //given
+        final Set<Person> people = new HashSet<>();
+
+        //when
+        when(personDao.findByGender(Gender.M)).thenReturn(people);
+        final int childrenNumber = personService.sumChildrenNumberOfFilteredPeople(Gender.M);
+
+        //then
+        assertThat(childrenNumber).isEqualTo(0);
     }
 }

@@ -1,29 +1,26 @@
 buildscript {
 	ext {
-		springBootVersion = "1.5.9.RELEASE"
-		liquibasePluginVersion = "1.2.4"
 		postgresqlVersion = "42.1.4"
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.postgresql:postgresql:${postgresqlVersion}")
-		classpath("gradle.plugin.org.liquibase:liquibase-gradle-plugin:${liquibasePluginVersion}")
 	}
 }
 
 plugins {
 	id 'org.liquibase.gradle' version '1.2.4'
 	id "net.ltgt.apt" version "0.13"
+	id "org.springframework.boot" version "1.5.9.RELEASE"
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-
+//czy pluginy z plugins{} są autmatycznie apply'owane
 repositories {
 	mavenCentral()
 }
@@ -36,7 +33,7 @@ liquibase {
 	activities {
 		main {
 			changeLogFile 'src/main/resources/liquibase-changelog.xml'
-			url 'jdbc:postgresql://localhost:5433/spring_boot_project'
+			url 'jdbc:postgresql://localhost:5432/spring_boot_project'
 			username 'traininguser'
 			password 'trainingpassword'
 		}
@@ -58,6 +55,7 @@ ext {
 	lombokVersion = "1.16.18"
 	hibernateMetamodelGeneratorVersion = "5.2.12.Final"
 	springBootStarterDataJpaVersion = "1.5.9.RELEASE"
+	apacheCommonsLang3Version = "3.7"
 }
 
 ext['hibernate.version'] = '5.2.12.Final'
@@ -74,6 +72,7 @@ dependencies {
 	compile("org.springframework:spring-orm:${springOrmVersion}")
 	compile("org.projectlombok:lombok:${lombokVersion}")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootStarterDataJpaVersion}")
+	compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
 
 	testCompile("com.h2database:h2:${h2Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")

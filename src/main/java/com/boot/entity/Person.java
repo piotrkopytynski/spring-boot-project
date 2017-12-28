@@ -23,8 +23,8 @@ public class Person extends AbstractEntity {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Email
     @NotBlank
+    @Email
     @Column(name = "email", nullable = false, unique = true, length = 254)
     private String email;
 
@@ -42,7 +42,7 @@ public class Person extends AbstractEntity {
     private int childrenNumber;
 
     @Setter(AccessLevel.NONE)
-    @ManyToMany(mappedBy = "persons", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(mappedBy = "people", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     Set<Address> addresses = new HashSet<>();
 
     @Setter(AccessLevel.NONE)
@@ -63,12 +63,12 @@ public class Person extends AbstractEntity {
 
     public void addAddress(final Address address) {
         addresses.add(address);
-        address.persons.add(this);
+        address.people.add(this);
     }
 
     public void removeAddress(final Address address) {
         addresses.remove(address);
-        address.persons.remove(this);
+        address.people.remove(this);
     }
 
     public Set<Car> getCars() {

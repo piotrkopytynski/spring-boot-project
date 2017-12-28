@@ -17,6 +17,9 @@ import java.util.*;
 @Repository
 public class PersonDaoImpl extends AbstractDaoImpl<Person> implements PersonDao {
 
+    public static final String FIELD_GENDER = "gender";
+    public static final String FIELD_EMAIL = "email";
+
     @Override
     protected Class<Person> getEntityClass() {
         return Person.class;
@@ -25,33 +28,35 @@ public class PersonDaoImpl extends AbstractDaoImpl<Person> implements PersonDao 
     @Override
     public Person findByEmail(final String email) {
         final Query query = getEntityManager().createQuery("SELECT e FROM person e where e.email = :email");
-        query.setParameter("email", email);
+        query.setParameter(FIELD_EMAIL, email);
         return (Person) query.getSingleResult();
     }
 
     @Override
     public Set<Person> findByGender(final Gender gender) {
         final Query query = getEntityManager().createQuery("SELECT e FROM person e where e.gender = :gender");
-        query.setParameter("gender", gender);
+        query.setParameter(FIELD_GENDER, gender);
         return new HashSet<>(query.getResultList());
     }
 
     @Override
-    public Set<Person> findFiltered(final Gender gender, final Integer childrenNumber, final Boolean insured) {
+    public Set<Person> findFiltered(final Gender genderParam, final Integer childrenNumber, final Boolean insured) {
         final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         final CriteriaQuery<Person> cq = cb.createQuery(getEntityClass());
         final Root<Person> root = cq.from(getEntityClass());
-
         final List<Predicate> predicates = new ArrayList<>();
-        if (Optional.ofNullable(gender).isPresent()) {
-            predicates.add(cb.equal(root.get(Person_.gender), gender));
-        }
-        if (Optional.ofNullable(childrenNumber).isPresent()) {
-            predicates.add(cb.equal(root.get(Person_.childrenNumber), childrenNumber));
-        }
-        if (Optional.ofNullable(insured).isPresent()) {
-            predicates.add(cb.equal(root.get(Person_.insured), insured));
-        }
+
+        Optional.ofNullable(genderParam)
+                .map(gender -> cb.equal(root.get(Person_.gender), gender))
+                .ifPresent(predicates::add);
+
+        Optional.ofNullable(childrenNumber)
+                .map(gender -> cb.equal(root.get(Person_.childrenNumber), childrenNumber))
+                .ifPresent(predicates::add);
+
+        Optional.ofNullable(insured)
+                .map(gender -> cb.equal(root.get(Person_.insured), insured))
+                .ifPresent(predicates::add);
 
         cq.select(root);
         cq.where(predicates.toArray(new Predicate[] {}));

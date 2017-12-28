@@ -5,10 +5,17 @@ import com.boot.entity.Address;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.boot.TestObjectFactory.generateAddress;
+import static com.boot.TestObjectFactory.generatePerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,8 +30,9 @@ public class PersonDaoTest extends AbstractTest {
     @Test
     public void personShouldHaveAddressAfterPersist() {
         //given
-        Person person = new Person("Michael Angelo", "michael@gmail.com", Gender.M, true, 2);
-        Address address = new Address("Wrocław", "Reja", "24v", "50-225");
+        Person person = generatePerson();
+        Address address = generateAddress();
+
 
         //when
         address = addressDao.save(address);
@@ -38,8 +46,8 @@ public class PersonDaoTest extends AbstractTest {
     @Test
     public void personShouldHaveAddressAfterMerge() {
         //given
-        Person person = new Person("Dojo", "dojo@gmail.com", Gender.M, true, 2);
-        Address address = new Address("Wrocław", "Prusa", "22", "50-225");
+        Person person = generatePerson();
+        Address address = generateAddress();
 
         //when
         address = addressDao.save(address);
@@ -54,40 +62,103 @@ public class PersonDaoTest extends AbstractTest {
     @Test
     public void shouldFindPersonByEmail() {
         //given
-        final Person person = personDao.save(new Person("Benjamin", "geeeewww@gmail.com", Gender.M, true, 2));
+        final Person person = personDao.save(generatePerson());
+
+        //when
+        final Person personFoundByEmail = personDao.findByEmail(person.getEmail());
 
         //then
-        assertThat(personDao.findByEmail(person.getEmail())).isEqualTo(person);
+        assertThat(personFoundByEmail).isEqualTo(person);
     }
 
     @Test
-    public void shouldFindPersonsByGender() {
+    public void shouldThrowExceptionWhenEmailIsNull() {
         //given
-        final Person person1 = personDao.save(new Person("Vincent Vega", "vinnnie@gmail.com", Gender.M, true, 2));
-        final Person person2 = personDao.save(new Person("Johnny Bravo", "johnny@gmail.com", Gender.M, true, 2));
-        final Person person3 = personDao.save(new Person("Lou Vega", "lv@gmail.com", Gender.M, true, 2));
-        final Person person4 = personDao.save(new Person("Lisa Moon", "lisemon@gmail.com", Gender.F, true, 1));
+        final Person person = generatePerson();
+        person.setEmail(null);
+
+        //when
+        final ThrowableAssert.ThrowingCallable invocation = () -> personDao.save(person);
 
         //then
-        assertThat(personDao.findByGender(Gender.M)).hasSize(3).containsExactlyInAnyOrder(person1, person2, person3);
+        assertThatThrownBy(invocation).isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
-    public void shouldFindFilteredPersons() {
+    public void shouldThrowExceptionWhenEmailUniquenessIsViolated() {
         //given
-        personDao.save(new Person("Vincent Vega", "vinnnie@gmail.com", Gender.M, true, 2));
-        personDao.save(new Person("Johnny Bravo", "johnny@gmail.com", Gender.M, false, 3));
-        personDao.save(new Person("Lou Vega", "lv@gmail.com", Gender.M, false, 2));
-        personDao.save(new Person("Lisa Moon", "lisemon@gmail.com", Gender.F, false, 1));
-        personDao.save(new Person("Ridge Forester", "ridge@gmail.com", Gender.M, true, 0));
-        personDao.save(new Person("Barbara Kwarc", "kleks@gmail.com", Gender.F, true, 0));
-        personDao.save(new Person("Uzumaki Naruto", "naruto@gmail.com", Gender.M, true, 1));
-        personDao.save(new Person("Maria Skłodowska-Curie", "maria@gmail.com", Gender.F, true, 3));
-        personDao.save(new Person("Lech Wałęsa", "walesa@gmail.com", Gender.M, false, 1));
-        personDao.save(new Person("Malcolm X", "malcolm@gmail.com", Gender.M, true, 3));
+        final Person person = personDao.save(generatePerson());
+        personDao.flush(person);
+        final Person person2 = generatePerson();
+        person2.setEmail(person.getEmail());
 
+        //when
+        final ThrowableAssert.ThrowingCallable invocation = () -> {
+            personDao.save(person2);
+            personDao.flush(person2);
+        };
+
+        //then
+        assertThatThrownBy(invocation).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenNoPersonWithGivenEmailFound() {
+        //given
+        final String notExistingEmail = "random@gmail.com";
+
+        //when
+        final ThrowableAssert.ThrowingCallable invocation = () -> personDao.findByEmail(notExistingEmail);
+
+        //then
+        assertThatThrownBy(invocation).isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @Test
+    public void shouldFindPeopleByGender() {
+        //given
+        final Person person1 = personDao.save(generatePerson(Gender.M));
+        final Person person2 = personDao.save(generatePerson(Gender.M));
+        final Person person3 = personDao.save(generatePerson(Gender.M));
+        final Person person4 = personDao.save(generatePerson(Gender.F));
+
+        //when
+        final Set<Person> peopleByGender = personDao.findByGender(Gender.M);
+
+        //then
+        assertThat(peopleByGender).hasSize(3).containsExactlyInAnyOrder(person1, person2, person3);
+    }
+
+    @Test
+    public void shouldReturnEmptySetWhenNoResultsForGivenGenderFound() {
+        //given
+        final Set<Person> peopleSet = new HashSet<>();
+
+        //when
+        final Set<Person> peopleByGender = personDao.findByGender(Gender.F);
+
+        //then
+        assertThat(peopleByGender).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnEmptySetWhenParamIsNull() {
+        //given
+        personDao.save(generatePerson(Gender.M));
+        personDao.save(generatePerson(Gender.F));
+
+        //when
+        final Set<Person> peopleByGender = personDao.findByGender(null);
+
+        //then
+        assertThat(peopleByGender).isEmpty();
+    }
+
+    @Test
+    public void shouldFindFilteredPeople() {
+        //given
+        initPeople();
         final SoftAssertions softAssertions = new SoftAssertions();
-
 
         //then
         softAssertions.assertThat(personDao.findFiltered(Gender.M, 0, true)).hasSize(1);
@@ -99,41 +170,103 @@ public class PersonDaoTest extends AbstractTest {
         softAssertions.assertThat(personDao.findFiltered(Gender.F, 3, true)).hasSize(1);
         softAssertions.assertThat(personDao.findFiltered(Gender.F, 3, false)).hasSize(0);
 
-        softAssertions.assertThat(personDao.findFiltered(null, 1, true)).hasSize(1);
-        softAssertions.assertThat(personDao.findFiltered(null, 2, false)).hasSize(1);
-
-        softAssertions.assertThat(personDao.findFiltered(Gender.M, null, true)).hasSize(4);
-        softAssertions.assertThat(personDao.findFiltered(Gender.F, null, false)).hasSize(1);
-
-        softAssertions.assertThat(personDao.findFiltered(Gender.M, 2, null)).hasSize(2);
-        softAssertions.assertThat(personDao.findFiltered(Gender.F, 0, null)).hasSize(1);
-
-        softAssertions.assertThat(personDao.findFiltered(Gender.M, null, null)).hasSize(7);
-        softAssertions.assertThat(personDao.findFiltered(Gender.F, null, null)).hasSize(3);
-
-        softAssertions.assertThat(personDao.findFiltered(null, 1, null)).hasSize(3);
-        softAssertions.assertThat(personDao.findFiltered(null, 3, null)).hasSize(3);
-
-
-        softAssertions.assertThat(personDao.findFiltered(null, null, true)).hasSize(6);
-        softAssertions.assertThat(personDao.findFiltered(null, null, false)).hasSize(4);
-
-        softAssertions.assertThat(personDao.findFiltered(null, null, null)).hasSize(10);
-
         softAssertions.assertAll();
     }
 
     @Test
-    public void shouldThrowExceptionWhenEmailUniquenessViolation() {
+    public void shouldFindFilteredPeopleWhenGenderIsNull() {
         //given
-        final Person person = new Person("Freddy", "aaaaa@5gmail.com", Gender.M, true, 2);
-        final Person person2 = new Person("Nicole", "aaaaa@5gmail.com", Gender.F, true, 1);
+        initPeople();
 
         //when
-        personDao.save(person);
-        personDao.save(person2);
+        final Set<Person> filteredPeople = personDao.findFiltered(null, 1, true);
 
         //then
-        assertThatThrownBy(() -> personDao.findAll()).isInstanceOf(DataIntegrityViolationException.class);
+        assertThat(filteredPeople).hasSize(1);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenChildrenNumberIsNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(Gender.M, null, true);
+
+        //then
+        assertThat(filteredPeople).hasSize(4);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenInsuranceIsNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(Gender.M, 2, null);
+
+        //then
+        assertThat(filteredPeople).hasSize(2);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenChildrenNumberAndGenderAreNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(null, null, true);
+
+        //then
+        assertThat(filteredPeople).hasSize(6);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenChildrenNumberAndInsuranceAreNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(Gender.M, null, null);
+
+        //then
+        assertThat(filteredPeople).hasSize(7);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenGenderAndInsuranceAreNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(null, 1, null);
+
+        //then
+        assertThat(filteredPeople).hasSize(3);
+    }
+
+    @Test
+    public void shouldFindFilteredPeopleWhenAllArgsAreNull() {
+        //given
+        initPeople();
+
+        //when
+        final Set<Person> filteredPeople = personDao.findFiltered(null, null, null);
+
+        //then
+        assertThat(filteredPeople).hasSize(10);
+    }
+
+    private void initPeople() {
+        personDao.save(generatePerson(Gender.M, true, 2));
+        personDao.save(generatePerson(Gender.M, false, 3));
+        personDao.save(generatePerson(Gender.M, false, 2));
+        personDao.save(generatePerson(Gender.F, false, 1));
+        personDao.save(generatePerson(Gender.M, true, 0));
+        personDao.save(generatePerson(Gender.F, true, 0));
+        personDao.save(generatePerson(Gender.M, true, 1));
+        personDao.save(generatePerson(Gender.F, true, 3));
+        personDao.save(generatePerson(Gender.M, false, 1));
+        personDao.save(generatePerson(Gender.M, true, 3));
     }
 }

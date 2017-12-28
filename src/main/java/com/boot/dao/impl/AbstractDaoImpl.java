@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.List;
 import java.util.Set;
 
 @Transactional
@@ -35,6 +34,11 @@ public abstract class AbstractDaoImpl<ENTITY> implements AbstractDao<ENTITY>  {
     @Override
     public void update(final ENTITY entity) {
         entityManager.merge(entity);
+    }
+
+    @Override
+    public void flush(ENTITY entity) {
+        entityManager.flush();
     }
 
     protected abstract Class<ENTITY> getEntityClass();

@@ -14,4 +14,6 @@ public interface AbstractDao<ENTITY> {
     ENTITY save(final ENTITY entity);
 
     void update(final ENTITY entity);
+
+    void flush(final ENTITY entity);
 }

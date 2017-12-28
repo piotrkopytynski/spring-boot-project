@@ -4,13 +4,8 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +14,9 @@ import static java.util.Collections.unmodifiableSet;
 
 @Entity(name = "address")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "street", "house_number", "postal_code"}))
+@EqualsAndHashCode(of = {"city", "street", "houseNumber", "postalCode"}, callSuper = false)
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"city", "street", "houseNumber", "postalCode"}, callSuper = false)
 public class Address extends AbstractEntity {
 
     @NotBlank
@@ -53,10 +48,11 @@ public class Address extends AbstractEntity {
                     @Index(name = "person_id_index", columnList = "person_id"),
             }
     )
-    Set<Person> persons = new HashSet<>();
+    Set<Person> people = new HashSet<>();
 
     public Address() {
     }
+    //można zrobić lombokiem, ale po pierwsze upewnic sie czy musi byc publiczny
 
     public Address(final String city, final String street, final String houseNumber, final String postalCode) {
         this.city = city;
@@ -65,17 +61,17 @@ public class Address extends AbstractEntity {
         this.postalCode = postalCode;
     }
 
-    public Set<Person> getPersons() {
-        return unmodifiableSet(persons);
+    public Set<Person> getPeople() {
+        return unmodifiableSet(people);
     }
 
     public void addPerson(final Person person) {
-        persons.add(person);
+        people.add(person);
         person.addresses.add(this);
     }
 
     public void removePerson(final Person person) {
-        persons.remove(person);
+        people.remove(person);
         person.addresses.remove(this);
     }
 }
