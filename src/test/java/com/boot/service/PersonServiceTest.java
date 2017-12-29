@@ -1,7 +1,7 @@
 package com.boot.service;
 
 import com.boot.AbstractTest;
-import com.boot.dao.impl.PersonDaoImpl;
+import com.boot.dao.PersonDao;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import com.boot.service.impl.PersonServiceImpl;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class PersonServiceTest extends AbstractTest {
 
     @Mock
-    private PersonDaoImpl personDao;
+    private PersonDao personDao;
 
     @InjectMocks
     private PersonServiceImpl personService;
@@ -74,3 +74,9 @@ public class PersonServiceTest extends AbstractTest {
         assertThat(childrenNumber).isEqualTo(0);
     }
 }
+//        gradlowe sprawy
+//
+//dołączyć spring mvc i napisać testy do contollera, który przyjmie odpowiednie parametry
+//w przypadku poprawności parametrów utworzy person i zakomunikuje sukces
+//w przypadku niepoprawncyh parametrów zakomunikuje błędy
+//ZACZĄC od testów!

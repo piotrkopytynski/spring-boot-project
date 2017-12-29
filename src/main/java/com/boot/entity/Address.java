@@ -50,10 +50,6 @@ public class Address extends AbstractEntity {
     )
     Set<Person> people = new HashSet<>();
 
-    public Address() {
-    }
-    //można zrobić lombokiem, ale po pierwsze upewnic sie czy musi byc publiczny
-
     public Address(final String city, final String street, final String houseNumber, final String postalCode) {
         this.city = city;
         this.street = street;

@@ -26,7 +26,7 @@ public class AddressDaoTest extends AbstractTest {
         addressDao.save(address);
 
         //then
-        assertThat(addressDao.getById(address.getId()).getPeople()).contains(person);
+        assertThat(addressDao.findOne(address.getId()).getPeople()).contains(person);
     }
 
     @Test
@@ -38,9 +38,9 @@ public class AddressDaoTest extends AbstractTest {
         //when
         addressDao.save(address);
         address.addPerson(person);
-        addressDao.update(address);
+        addressDao.save(address);
 
         //then
-        assertThat(addressDao.getById(address.getId()).getPeople()).contains(person);
+        assertThat(addressDao.findOne(address.getId()).getPeople()).contains(person);
     }
 }

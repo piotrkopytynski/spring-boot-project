@@ -1,12 +1,11 @@
 package com.boot.dao.impl;
 
-import com.boot.dao.PersonDao;
+import com.boot.dao.PersonDaoCustom;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import com.boot.entity.Person_;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,35 +14,12 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 
 @Repository
-public class PersonDaoImpl extends AbstractDaoImpl<Person> implements PersonDao {
-
-    public static final String FIELD_GENDER = "gender";
-    public static final String FIELD_EMAIL = "email";
-
-    @Override
-    protected Class<Person> getEntityClass() {
-        return Person.class;
-    }
-
-    @Override
-    public Person findByEmail(final String email) {
-        final Query query = getEntityManager().createQuery("SELECT e FROM person e where e.email = :email");
-        query.setParameter(FIELD_EMAIL, email);
-        return (Person) query.getSingleResult();
-    }
-
-    @Override
-    public Set<Person> findByGender(final Gender gender) {
-        final Query query = getEntityManager().createQuery("SELECT e FROM person e where e.gender = :gender");
-        query.setParameter(FIELD_GENDER, gender);
-        return new HashSet<>(query.getResultList());
-    }
-
+public class PersonDaoImpl extends AbstractDaoImpl implements PersonDaoCustom {
     @Override
     public Set<Person> findFiltered(final Gender genderParam, final Integer childrenNumber, final Boolean insured) {
         final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        final CriteriaQuery<Person> cq = cb.createQuery(getEntityClass());
-        final Root<Person> root = cq.from(getEntityClass());
+        final CriteriaQuery<Person> cq = cb.createQuery(Person.class);
+        final Root<Person> root = cq.from(Person.class);
         final List<Predicate> predicates = new ArrayList<>();
 
         Optional.ofNullable(genderParam)

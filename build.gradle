@@ -20,7 +20,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-//czy pluginy z plugins{} są autmatycznie apply'owane
+
 repositories {
 	mavenCentral()
 }
@@ -63,6 +63,7 @@ ext['spring.version'] = '5.0.2.RELEASE'
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
+	compile 'org.springframework.data:spring-data-jpa'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
 	compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${hibernateJpaVersion}")

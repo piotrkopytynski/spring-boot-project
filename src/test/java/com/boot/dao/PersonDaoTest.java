@@ -9,7 +9,6 @@ import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,14 +32,13 @@ public class PersonDaoTest extends AbstractTest {
         Person person = generatePerson();
         Address address = generateAddress();
 
-
         //when
         address = addressDao.save(address);
         person.addAddress(address);
         person = personDao.save(person);
 
         //then
-        assertThat(personDao.getById(person.getId()).getAddresses()).contains(address);
+        assertThat(personDao.findOne(person.getId()).getAddresses()).contains(address);
     }
 
     @Test
@@ -53,10 +51,10 @@ public class PersonDaoTest extends AbstractTest {
         address = addressDao.save(address);
         person = personDao.save(person);
         person.addAddress(address);
-        personDao.update(person);
+        personDao.save(person);
 
         //then
-        assertThat(personDao.getById(person.getId()).getAddresses()).contains(address);
+        assertThat(personDao.findOne(person.getId()).getAddresses()).contains(address);
     }
 
     @Test
@@ -88,14 +86,14 @@ public class PersonDaoTest extends AbstractTest {
     public void shouldThrowExceptionWhenEmailUniquenessIsViolated() {
         //given
         final Person person = personDao.save(generatePerson());
-        personDao.flush(person);
+//        personDao.(person);
         final Person person2 = generatePerson();
         person2.setEmail(person.getEmail());
 
         //when
         final ThrowableAssert.ThrowingCallable invocation = () -> {
             personDao.save(person2);
-            personDao.flush(person2);
+//            personDao.flush(person2);
         };
 
         //then
@@ -103,15 +101,15 @@ public class PersonDaoTest extends AbstractTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenNoPersonWithGivenEmailFound() {
+    public void shouldReturnNullWhenNoPersonWithGivenEmailFound() {
         //given
         final String notExistingEmail = "random@gmail.com";
 
         //when
-        final ThrowableAssert.ThrowingCallable invocation = () -> personDao.findByEmail(notExistingEmail);
+        final Person personFoundByEmail = personDao.findByEmail(notExistingEmail);
 
         //then
-        assertThatThrownBy(invocation).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(personFoundByEmail).isNull();
     }
 
     @Test
