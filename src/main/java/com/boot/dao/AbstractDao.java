@@ -2,18 +2,9 @@ package com.boot.dao;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Repository
 public interface AbstractDao<ENTITY> {
-
-    Set<ENTITY> findAll();
-
-    ENTITY getById(final long id);
-
-    ENTITY save(final ENTITY entity);
-
-    void update(final ENTITY entity);
-
-    void flush(final ENTITY entity);
+    Optional<ENTITY> findByUniqueField(final String uniqueField, final String value);
 }

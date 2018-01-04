@@ -1,19 +1,19 @@
 buildscript {
-	ext {
-		postgresqlVersion = "42.1.4"
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.postgresql:postgresql:${postgresqlVersion}")
-	}
+    ext {
+        postgresqlVersion = "42.1.4"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.postgresql:postgresql:${postgresqlVersion}")
+    }
 }
 
 plugins {
-	id 'org.liquibase.gradle' version '1.2.4'
-	id "net.ltgt.apt" version "0.13"
-	id "org.springframework.boot" version "1.5.9.RELEASE"
+    id 'org.liquibase.gradle' version '1.2.4'
+    id "net.ltgt.apt" version "0.13"
+    id "org.springframework.boot" version "1.5.9.RELEASE"
 }
 
 apply plugin: 'java'
@@ -22,7 +22,7 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 group = 'com.boot.project'
@@ -30,55 +30,64 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 liquibase {
-	activities {
-		main {
-			changeLogFile 'src/main/resources/liquibase-changelog.xml'
-			url 'jdbc:postgresql://localhost:5432/spring_boot_project'
-			username 'traininguser'
-			password 'trainingpassword'
-		}
-	}
+    activities {
+        main {
+            changeLogFile 'src/main/resources/liquibase-changelog.xml'
+            url 'jdbc:postgresql://localhost:5432/spring_boot_project'
+            username 'traininguser'
+            password 'trainingpassword'
+        }
+    }
 }
 
 ext {
-	hibernateJpaVersion = "1.0.0.Final"
-	springBootStarterJdbcVersion =  "1.5.9.RELEASE"
-	postgresqlVersion = "42.1.4"
-	hibernateCoreVersion = "5.2.12.Final"
-	hibernateValidatorVersion = "6.0.5.Final"
-	validationApiVersion = "2.0.0.Final"
-	springOrmVersion = "5.0.2.RELEASE"
-	h2Version = "1.4.196"
-	mockitoVersion = "2.13.0"
-	assertjVersion = "3.8.0"
-	liquibaseVersion = "3.5.3"
-	lombokVersion = "1.16.18"
-	hibernateMetamodelGeneratorVersion = "5.2.12.Final"
-	springBootStarterDataJpaVersion = "1.5.9.RELEASE"
-	apacheCommonsLang3Version = "3.7"
+    hibernateJpaVersion = "1.0.0.Final"
+    springBootStarterJdbcVersion = "1.5.9.RELEASE"
+    postgresqlVersion = "42.1.4"
+    hibernateCoreVersion = "5.2.12.Final"
+    hibernateValidatorVersion = "6.0.5.Final"
+    validationApiVersion = "2.0.0.Final"
+    springOrmVersion = "5.0.2.RELEASE"
+    h2Version = "1.4.196"
+    mockitoVersion = "2.13.0"
+    assertjVersion = "3.8.0"
+    liquibaseVersion = "3.5.3"
+    lombokVersion = "1.16.18"
+    hibernateMetamodelGeneratorVersion = "5.2.12.Final"
+    springBootStarterDataJpaVersion = "1.5.9.RELEASE"
+    apacheCommonsLang3Version = "3.7"
+    springWebMvcVersion = "5.0.2.RELEASE"
+    jacksonVersion = "2.9.3"
+    mapstructVersion = "1.2.0.Final"
 }
 
 ext['hibernate.version'] = '5.2.12.Final'
 ext['spring.version'] = '5.0.2.RELEASE'
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter')
-	compile 'org.springframework.data:spring-data-jpa'
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.data:spring-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 
-	compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${hibernateJpaVersion}")
-	compile("org.postgresql:postgresql:${postgresqlVersion}")
-	compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
-	compile("javax.validation:validation-api:${validationApiVersion}")
-	compile("org.springframework:spring-orm:${springOrmVersion}")
-	compile("org.projectlombok:lombok:${lombokVersion}")
-	compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootStarterDataJpaVersion}")
-	compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
+    compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${hibernateJpaVersion}")
+    compile("org.postgresql:postgresql:${postgresqlVersion}")
+    compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+    compile("javax.validation:validation-api:${validationApiVersion}")
+    compile("org.springframework:spring-orm:${springOrmVersion}")
+    compile("org.projectlombok:lombok:${lombokVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootStarterDataJpaVersion}")
+    compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
+    compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+    compile("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+    compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    compile("org.springframework:spring-webmvc:${springWebMvcVersion}")
+    compile("org.mapstruct:mapstruct-jdk8:${mapstructVersion}")
 
-	testCompile("com.h2database:h2:${h2Version}")
-	testCompile("org.mockito:mockito-core:${mockitoVersion}")
-	testCompile("org.assertj:assertj-core:${assertjVersion}")
+    testCompile("com.h2database:h2:${h2Version}")
+    testCompile("org.mockito:mockito-core:${mockitoVersion}")
+    testCompile("org.assertj:assertj-core:${assertjVersion}")
 
-	apt("org.projectlombok:lombok:${lombokVersion}")
-	apt("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
+    apt("org.projectlombok:lombok:${lombokVersion}")
+    apt("org.hibernate:hibernate-jpamodelgen:${hibernateMetamodelGeneratorVersion}")
+    apt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 }

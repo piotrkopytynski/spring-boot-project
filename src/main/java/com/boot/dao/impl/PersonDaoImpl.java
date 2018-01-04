@@ -1,6 +1,7 @@
 package com.boot.dao.impl;
 
 import com.boot.dao.PersonDaoCustom;
+import com.boot.entity.AbstractEntity;
 import com.boot.entity.Gender;
 import com.boot.entity.Person;
 import com.boot.entity.Person_;
@@ -15,6 +16,7 @@ import java.util.*;
 
 @Repository
 public class PersonDaoImpl extends AbstractDaoImpl implements PersonDaoCustom {
+
     @Override
     public Set<Person> findFiltered(final Gender genderParam, final Integer childrenNumber, final Boolean insured) {
         final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -39,5 +41,10 @@ public class PersonDaoImpl extends AbstractDaoImpl implements PersonDaoCustom {
 
         final TypedQuery<Person> typedQuery = getEntityManager().createQuery(cq);
         return new HashSet<>(typedQuery.getResultList());
+    }
+
+    @Override
+    protected Class<? extends AbstractEntity> getEntity() {
+        return Person.class;
     }
 }
