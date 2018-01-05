@@ -1,6 +1,7 @@
 package com.boot.entity;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -20,10 +21,12 @@ import static java.util.Collections.unmodifiableSet;
 public class Person extends AbstractEntity {
 
     @NotBlank
+    @Length(max = 255)
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @NotBlank
+    @Length(max = 254)
     @Email
     @Column(name = "email", nullable = false, unique = true, length = 254)
     private String email;

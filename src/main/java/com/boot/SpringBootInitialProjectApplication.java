@@ -8,12 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringBootInitialProjectApplication implements ApplicationRunner {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(SpringBootInitialProjectApplication.class, args);
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(final ApplicationArguments args) throws Exception {
 
     }
 }

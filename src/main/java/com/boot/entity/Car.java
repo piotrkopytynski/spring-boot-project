@@ -1,6 +1,7 @@
 package com.boot.entity;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class Car extends AbstractEntity {
 
     @NotBlank
+    @Length(max = 255)
     @lombok.NonNull
     @Column(name = "registration_number", nullable = false, unique = true, length = 255)
     private String registrationNumber;

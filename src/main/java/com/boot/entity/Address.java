@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,17 +21,22 @@ import static java.util.Collections.unmodifiableSet;
 public class Address extends AbstractEntity {
 
     @NotBlank
+    @Length(max = 255)
     @Column(name = "city", nullable = false, length = 255)
     private String city;
 
+    @NotBlank
+    @Length(max = 255)
     @Column(name = "street", nullable = true, length = 255)
     private String street;
 
     @NotBlank
+    @Length(max = 16)
     @Column(name = "house_number", nullable = false, length = 16)
     private String houseNumber;
 
     @NotBlank
+    @Length(max = 16)
     @Column(name = "postal_code", nullable = false, length = 16)
     private String postalCode;
 

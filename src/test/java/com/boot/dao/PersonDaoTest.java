@@ -86,15 +86,11 @@ public class PersonDaoTest extends AbstractTest {
     public void shouldThrowExceptionWhenEmailUniquenessIsViolated() {
         //given
         final Person person = personDao.save(generatePerson());
-//        personDao.(person);
         final Person person2 = generatePerson();
         person2.setEmail(person.getEmail());
 
         //when
-        final ThrowableAssert.ThrowingCallable invocation = () -> {
-            personDao.save(person2);
-//            personDao.flush(person2);
-        };
+        final ThrowableAssert.ThrowingCallable invocation = () -> personDao.save(person2);
 
         //then
         assertThatThrownBy(invocation).isInstanceOf(DataIntegrityViolationException.class);
